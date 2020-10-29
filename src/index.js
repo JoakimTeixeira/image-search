@@ -2,11 +2,13 @@ import React, { useEffect, useState, useRef } from 'react'
 import ReactDOM from 'react-dom'
 import axios from 'axios'
 import video from './resources/milky-way.mp4'
+import Loader from './components/Loader'
 import './styles.css'
 
 const App = () => {
 	const [photos, setPhotos] = useState([])
 	const [searchTerm, setSearchTerm] = useState('')
+	const [isLoading, setIsLoading] = useState(false)
 	const imageAlt = useRef('')
 	const inputFocus = useRef('')
 
@@ -23,6 +25,8 @@ const App = () => {
 	}
 
 	const fetchPhotos = async () => {
+		setIsLoading(true)
+
 		const response = await axios.get('https://api.pexels.com/v1/search', {
 			params: {
 				query: { searchTerm },
@@ -31,10 +35,16 @@ const App = () => {
 				Authorization: process.env.REACT_APP_PEXELS_API_KEY,
 			},
 		})
+
 		setPhotos(response.data.photos)
+		setIsLoading(false)
 	}
 
 	const renderPhotos = () => {
+		if (isLoading) {
+			return <Loader />
+		}
+
 		return photos.map((photo) => {
 			return (
 				<div key={photo.id} className="col-md-4 mb-3">
@@ -43,7 +53,7 @@ const App = () => {
 							<img
 								src={photo.src.medium}
 								className="img-fluid img-thumbnail"
-								alt={`${imageAlt.current} image`}
+								alt={`${imageAlt.current}`}
 								width="100%"
 							/>
 						</a>
