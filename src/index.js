@@ -55,7 +55,7 @@ const App = () => {
 
 	useEffect(() => {
 		inputFocus.current.focus()
-	}, [searchTerm])
+	}, [photos])
 
 	return (
 		<>
