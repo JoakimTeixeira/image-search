@@ -2,9 +2,10 @@ import React, { useEffect, useState, useRef } from 'react'
 import ReactDOM from 'react-dom'
 import axios from 'axios'
 import video from './resources/milky-way.mp4'
-import Photos from './components/Photos'
 import Loader from './components/Loader'
 import Pagination from './components/Pagination'
+import Photos from './components/Photos'
+import Header from './components/Header'
 import './styles.css'
 
 const App = () => {
@@ -94,44 +95,13 @@ const App = () => {
 
 	return (
 		<>
-			<div className="container">
-				<header className="mb-5">
-					<div className="w-50 mx-auto row">
-						<div className="form-group mt-5 col-12">
-							<h1 className="text-center text-white p-2 border-bottom border-light mb-4">
-								Image Search
-							</h1>
-							<div className="row">
-								<form className="form col-md-12" onSubmit={handleFormSubmit}>
-									<div className="row">
-										<div className="col-md-9">
-											<input
-												className="form-control mr-sm-2 mb-3 "
-												type="search"
-												placeholder="Enter item..."
-												aria-label="Search"
-												onChange={handleSearchInput}
-												value={input}
-												ref={inputFocus}
-											/>
-										</div>
-										<div className="col-md-3">
-											<button
-												className="form-control btn btn-outline-light mb-3 "
-												type="submit"
-											>
-												<i className="fas fa-search"></i>
-											</button>
-										</div>
-									</div>
-								</form>
-							</div>
-						</div>
-					</div>
-				</header>
-
-				{renderPhotos()}
-			</div>
+			<Header
+				handleFormSubmit={handleFormSubmit}
+				handleSearchInput={handleSearchInput}
+				input={input}
+				inputFocus={inputFocus}
+				renderPhotos={renderPhotos}
+			/>
 
 			<video id="background-video" playsInline muted loop autoPlay>
 				<source src={video} type="video/mp4" />
