@@ -3,69 +3,110 @@ import ReactDOM from 'react-dom'
 import axios from 'axios'
 import video from './resources/milky-way.mp4'
 import Loader from './components/Loader'
+import Pagination from './components/Pagination'
 import './styles.css'
 
 const App = () => {
 	const [photos, setPhotos] = useState([])
+	const [input, setInput] = useState('')
 	const [searchTerm, setSearchTerm] = useState('')
 	const [isLoading, setIsLoading] = useState(false)
-	const imageAlt = useRef('')
 	const inputFocus = useRef('')
 
+	const [currentPage, setCurrentPage] = useState(1)
+	const photosPerPage = useRef(20)
+	const totalPhotos = useRef('')
+
+	useEffect(() => {
+		inputFocus.current.focus()
+	}, [photos])
+
 	const handleSearchInput = (event) => {
-		setSearchTerm(event.target.value)
+		setInput(event.target.value)
 	}
 
 	const handleFormSubmit = (event) => {
 		event.preventDefault()
 
-		fetchPhotos()
-		imageAlt.current = searchTerm
-		setSearchTerm('')
+		const updateSearchTermAndInput = () => {
+			setSearchTerm(input)
+			setInput('')
+		}
+
+		if (input !== searchTerm && searchTerm !== '') {
+			setCurrentPage(1)
+			updateSearchTermAndInput()
+		} else {
+			updateSearchTermAndInput()
+		}
 	}
 
-	const fetchPhotos = async () => {
-		setIsLoading(true)
+	useEffect(() => {
+		const fetchPhotos = async () => {
+			setIsLoading(true)
 
-		const response = await axios.get('https://api.pexels.com/v1/search', {
-			params: {
-				query: { searchTerm },
-			},
-			headers: {
-				Authorization: process.env.REACT_APP_PEXELS_API_KEY,
-			},
-		})
+			const response = await axios.get('https://api.pexels.com/v1/search', {
+				params: {
+					query: searchTerm,
+					page: currentPage,
+					per_page: photosPerPage.current,
+				},
+				headers: {
+					Authorization: process.env.REACT_APP_PEXELS_API_KEY,
+				},
+			})
 
-		setPhotos(response.data.photos)
-		setIsLoading(false)
-	}
+			totalPhotos.current = response.data.total_results
+
+			setPhotos(response.data.photos)
+			setIsLoading(false)
+		}
+
+		if (searchTerm.length > 0) {
+			fetchPhotos()
+		}
+	}, [searchTerm, currentPage])
 
 	const renderPhotos = () => {
 		if (isLoading) {
 			return <Loader />
 		}
 
-		return photos.map((photo) => {
-			return (
-				<div key={photo.id} className="col-md-4 mb-3">
-					<picture className="thumbnail">
-						<a href={photo.url} target="_blank" rel="noreferrer">
-							<img
-								src={photo.src.medium}
-								className="img-fluid img-thumbnail"
-								alt={`${imageAlt.current}`}
-								width="100%"
-							/>
-						</a>
-					</picture>
-				</div>
-			)
-		})
+		return (
+			<>
+				<section className="row mb-5">
+					{photos.map((photo) => {
+						return (
+							<div key={photo.id} className="col-md-4 mb-3">
+								<picture className="thumbnail">
+									<a href={photo.url} target="_blank" rel="noreferrer">
+										<img
+											src={photo.src.medium}
+											className="img-fluid img-thumbnail"
+											alt={`${searchTerm}`}
+											width="100%"
+										/>
+									</a>
+								</picture>
+							</div>
+						)
+					})}
+				</section>
+
+				{photos.length > 0 && (
+					<Pagination
+						currentPage={currentPage}
+						totalPhotos={totalPhotos.current}
+						handlePagination={handlePagination}
+					/>
+				)}
+			</>
+		)
 	}
 
-	useEffect(() => {
-		inputFocus.current.focus()
-	}, [photos])
+	const handlePagination = (number) => {
+		setCurrentPage(number)
+	}
 
 	return (
 		<>
@@ -86,7 +127,7 @@ const App = () => {
 												placeholder="Enter item..."
 												aria-label="Search"
 												onChange={handleSearchInput}
-												value={searchTerm}
+												value={input}
 												ref={inputFocus}
 											/>
 										</div>
@@ -105,7 +146,7 @@ const App = () => {
 					</div>
 				</header>
 
-				<section className="row">{renderPhotos()}</section>
+				{renderPhotos()}
 			</div>
 
 			<video id="background-video" playsInline muted loop autoPlay>
