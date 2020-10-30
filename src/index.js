@@ -2,6 +2,7 @@ import React, { useEffect, useState, useRef } from 'react'
 import ReactDOM from 'react-dom'
 import axios from 'axios'
 import video from './resources/milky-way.mp4'
+import Photos from './components/Photos'
 import Loader from './components/Loader'
 import Pagination from './components/Pagination'
 import './styles.css'
@@ -74,24 +75,7 @@ const App = () => {
 
 		return (
 			<>
-				<section className="row mb-5">
-					{photos.map((photo) => {
-						return (
-							<div key={photo.id} className="col-md-4 mb-3">
-								<picture className="thumbnail">
-									<a href={photo.url} target="_blank" rel="noreferrer">
-										<img
-											src={photo.src.medium}
-											className="img-fluid img-thumbnail"
-											alt={`${searchTerm}`}
-											width="100%"
-										/>
-									</a>
-								</picture>
-							</div>
-						)
-					})}
-				</section>
+				<Photos photos={photos} searchTerm={searchTerm} />
 
 				{photos.length > 0 && (
 					<Pagination
