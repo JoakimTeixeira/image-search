@@ -6,7 +6,13 @@ Project to test React with Axios, data fetching error handling, pagination and l
 
 ## Running the Project
 
-To get started, fork the repository and then run the following commands:
+To get started, fork the repository and rename the file ".env-example" to ".env" and fill in information about your API key.
+
+Then, run the following commands:
 
     npm install
     npm run start
+
+## Additional Information
+
+All project images are free stock photos provided by [Pexels API](https://www.pexels.com/api/)
