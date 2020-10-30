@@ -30,10 +30,10 @@ const Pagination = ({ currentPage, totalPhotos, handlePagination }) => {
 					return (
 						<li
 							key={number}
-							onClick={() => handlePagination(number)}
+							onClick={(event) => handlePagination(event, number)}
 							className={pageClass}
 						>
-							<a href="!#" className="page-link">
+							<a href="/" className="page-link">
 								{number}
 							</a>
 						</li>

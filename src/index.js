@@ -89,7 +89,8 @@ const App = () => {
 		)
 	}
 
-	const handlePagination = (number) => {
+	const handlePagination = (event, number) => {
+		event.preventDefault()
 		setCurrentPage(number)
 	}
 
