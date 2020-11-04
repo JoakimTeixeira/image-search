@@ -1,6 +1,6 @@
 # Image Search
 
-Project to test React with Axios, data fetching error handling, pagination and loading spinner
+Project to test React with Axios, data fetching error handling, pagination, loading spinner and enviroment variables.
 
 ![image](https://user-images.githubusercontent.com/12193814/97550076-f5dffb00-19af-11eb-8f51-48aeaab046a1.png)
 
