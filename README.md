@@ -7,6 +7,7 @@ Project to test React with Axios, data fetching error handling, pagination, load
 ## To-do
 
 - [ ] Refactor component states for better atomicity
+- [ ] Enhance image grid design
 - [ ] Implement React.memo method
 - [ ] Implement useCallback hook
 - [ ] Implement useMemo hook
